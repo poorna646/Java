@@ -1,0 +1,33 @@
+create database covid;
+use covid;
+create table covid.area(id int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                        latitude double NOT NULL,
+                        longitude double NOT NULL);
+
+create table covid.hospital(id int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                            areaId int(4) NOT NULL,
+                            name varchar(100) NOT NULL,
+                            availableBeds int(3) NOT NULL,
+                            FOREIGN KEY(areaId) REFERENCES covid.area(id));
+
+create table covid.patient(id int(4) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                           name varchar(100) NOT NULL,
+                           aadharid BIGINT(12) NOT NULL,
+                           areaId int(4) NOT NULL,
+                           hospitalId int(4) NOT NULL,
+                           status text NOT NULL,
+                           FOREIGN KEY(areaId) REFERENCES covid.area(id),
+                           FOREIGN KEY(hospitalId) REFERENCES covid.hospital(id));
+
+INSERT INTO area(latitude,longitude) VALUES(123.456,124.345),(123.532,124.445),(128.321,128.543),(132.342,132.521)
+
+INSERT INTO hospital(name,areaId,availableBeds) VALUES("Manapal Hospitals",1,12),("Apollo Hospitals",2,8),("KMC Hospitals",3,0),("Vijaya Hospitals",4,0);
+
+--->result of bracket binds to object b & b.id etc.. can be called
+SELECT a.id, a.name, a.availableBeds, b.latitude, b.longitude
+FROM
+(SELECT id, name, availableBeds, areaId FROM covid.hospital WHERE availableBeds > 0)a
+LEFT JOIN
+(SELECT id, latitude, longitude FROM covid.area)b
+ON a.areaId = b.id
+
