@@ -1,0 +1,83 @@
+import java.awt.event.ActionEvent; 
+import java.util.Random; 
+import javax.swing.*; 
+import java.awt.event.ActionListener;
+
+
+public class NumberGame { 
+
+    private JFrame frame; 
+    private JTextField inputField; 
+    private JLabel resultLabel; 
+    private JLabel scoreLabel; 
+    private int score = 10; 
+    private int answer;
+    private Random random = new Random();
+
+    public NumberGame(){
+         frame = new JFrame("Number Guessing Game"); 
+         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+         frame.setLayout(null);
+
+        // Select a random number between 1 and 10.
+        // Random random = new Random(); 
+        answer = random.nextInt(10) + 1;
+
+        // Make components
+        JLabel instructionLabel = new JLabel( "Guess the number (1–10):");
+        instructionLabel.setBounds(10, 10, 200, 25);
+        
+        inputField = new JTextField(); 
+        inputField.setBounds(10, 40, 100, 25);
+        
+        JButton guessButton=new JButton("Submit"); 
+        guessButton.setBounds(120, 40, 100, 25);
+        
+        resultLabel = new JLabel("You are right/wrong");
+        resultLabel.setBounds(10, 80, 200, 25);
+        
+        scoreLabel = new JLabel("Your score: "+score);
+        scoreLabel.setBounds(10, 110, 200, 25);
+
+        // Add components to the frame.
+        frame.add(instructionLabel);
+        frame.add(inputField);
+        frame.add(guessButton);
+        frame.add(resultLabel);
+        frame.add(scoreLabel);
+
+        guessButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                try{
+                    int guess = Integer.parseInt(inputField.getText());
+                    if(guess == answer)
+                    {
+                        resultLabel.setText("You are right!");
+                        score++;
+                    }
+                    else
+                    {
+                        resultLabel.setText("Try again");
+                        score--;
+                    }
+                    scoreLabel.setText("Your score: "+score);
+                    answer = random.nextInt(10)+1;
+                }
+                catch(NumberFormatException ex)
+                {
+                    resultLabel.setText("Please enter a valid number.");
+                }
+            }
+        });
+
+frame.setSize(250,200);
+frame.setVisible(true);
+    }
+
+    public static void main(String[]args)
+    {
+        new NumberGame();
+    }
+}
